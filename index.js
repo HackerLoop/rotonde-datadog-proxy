@@ -8,7 +8,7 @@ const client = newClient('ws://rotonde:4224/');
 
 let config
 try {
-  config = require('/etc/rotonde-datadog-proxy/config.json');
+  config = require('/etc/rotonde-proxy/config.json');
 }
 catch(err) {
   console.log(err);
