@@ -15,16 +15,6 @@ catch(err) {
   config = require('./config.json');
 }
 
-/*client.eventHandlers.attach('SMOKE_DETECTOR', (e) => {
-  client.sendAction('DATADOG_EVENT', {
-    title: 'Smoke Detector Triggered',
-    text: 'Smoke detector in cooltainer just triggered an alarm.',
-    options: {
-      type: 'error',
-    }
-  });
-});*/
-
 if (!config.event_mappings) {
   console.log('no event_mappings configured');
   process.exit(1);
@@ -46,12 +36,12 @@ const mapToPacket = (from, to) => {
     // constant string value (surrounded with ')
     if (value.indexOf("'") == 0 && value.lastIndexOf("'") == value.length-1) {
       // there is a template-like feature here, part of the string can be replaced by an event's data attribute, by placing an attribute name as {attribute}, or a path as {path,to,attribute}
-      const replaces = value.match(/{([^}]+)}/g);
+      const replaces = value.match(/{[^}]+}/g);
       if (replaces && replaces.length) {
         data[key] = _.reduce(replaces, (value, replace) => {
+          replace = replace.replace(/{|}/g, '');
           const replaceTokens = replace.split(',');
-          data[key] = value.replace('{' + replace + '}', toDataValue(from, replaceTokens));
-          return data;
+          return value.replace('{' + replace + '}', toDataValue(from, replaceTokens));
         }, value);
       } else {
         data[key] = value;
